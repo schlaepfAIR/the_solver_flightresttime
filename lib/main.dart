@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -26,78 +27,24 @@ class FlightInfoTabView extends StatefulWidget {
 }
 
 class _FlightInfoTabViewState extends State<FlightInfoTabView> {
-  final TextEditingController _flightNumberController = TextEditingController();
-  final TextEditingController _restTimeStartController =
-      TextEditingController();
-  final TextEditingController _restTimeEndController = TextEditingController();
   final TextEditingController _amountOfShiftsController =
       TextEditingController();
-  final TextEditingController _overlapController = TextEditingController();
+
   Map<String, dynamic> _apiResponse = {};
+  final TextEditingController _flightNumberController = TextEditingController();
+  final TextEditingController _overlapController = TextEditingController();
+  final TextEditingController _restTimeEndController = TextEditingController();
+  final TextEditingController _restTimeStartController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _flightNumberController.dispose();
+    super.dispose();
+  }
 
   String _formatTime(DateTime dateTime) {
     return DateFormat('HH:mm').format(dateTime);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flight Info App'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTextField(
-              'Flight Number',
-              _flightNumberController,
-              smallInput: true,
-            ),
-            _buildTextField(
-              'Start Rest Time (min)',
-              _restTimeStartController,
-              smallInput: true,
-            ),
-            _buildTextField(
-              'End Rest Time Before Landing (min)',
-              _restTimeEndController,
-              smallInput: true,
-            ),
-            _buildTextField(
-              'Amount of Shifts',
-              _amountOfShiftsController,
-              smallInput: true,
-            ),
-            _buildTextField('Overlap (min)', _overlapController,
-                smallInput: true),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _fetchFlightInfo,
-              child: const Text('Get Flight Info'),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _makeShiftPlan,
-              child: const Text('Make Shift Plan'),
-            ),
-            const SizedBox(height: 16.0),
-            _apiResponse.isEmpty
-                ? const Center(child: Text('No data available'))
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildFullApiResponse(),
-                      if (_apiResponse['status'] == 'en-route' ||
-                          _apiResponse['status'] == 'scheduled')
-                        _buildFlightTimeInformation(),
-                    ],
-                  ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildTextField(
@@ -463,8 +410,63 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
   }
 
   @override
-  void dispose() {
-    _flightNumberController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flight Info App'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextField(
+              'Flight Number',
+              _flightNumberController,
+              smallInput: true,
+            ),
+            _buildTextField(
+              'Start Rest Time (min)',
+              _restTimeStartController,
+              smallInput: true,
+            ),
+            _buildTextField(
+              'End Rest Time Before Landing (min)',
+              _restTimeEndController,
+              smallInput: true,
+            ),
+            _buildTextField(
+              'Amount of Shifts',
+              _amountOfShiftsController,
+              smallInput: true,
+            ),
+            _buildTextField('Overlap (min)', _overlapController,
+                smallInput: true),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _fetchFlightInfo,
+              child: const Text('Get Flight Info'),
+            ),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _makeShiftPlan,
+              child: const Text('Make Shift Plan'),
+            ),
+            const SizedBox(height: 16.0),
+            _apiResponse.isEmpty
+                ? const Center(child: Text('No data available'))
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFullApiResponse(),
+                      if (_apiResponse['status'] == 'en-route' ||
+                          _apiResponse['status'] == 'scheduled')
+                        _buildFlightTimeInformation(),
+                    ],
+                  ),
+          ],
+        ),
+      ),
+    );
   }
 }
