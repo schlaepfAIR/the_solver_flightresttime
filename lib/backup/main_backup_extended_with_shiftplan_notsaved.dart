@@ -4,29 +4,33 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: FlightInfoTabView(),
     );
   }
 }
 
 class FlightInfoTabView extends StatefulWidget {
+  const FlightInfoTabView({super.key});
+
   @override
   _FlightInfoTabViewState createState() => _FlightInfoTabViewState();
 }
 
 class _FlightInfoTabViewState extends State<FlightInfoTabView> {
-  TextEditingController _flightNumberController = TextEditingController();
-  TextEditingController _restTimeStartController = TextEditingController();
-  TextEditingController _restTimeEndController = TextEditingController();
-  TextEditingController _amountOfShiftsController = TextEditingController();
-  TextEditingController _overlapController = TextEditingController();
+  final TextEditingController _flightNumberController = TextEditingController();
+  final TextEditingController _restTimeStartController = TextEditingController();
+  final TextEditingController _restTimeEndController = TextEditingController();
+  final TextEditingController _amountOfShiftsController = TextEditingController();
+  final TextEditingController _overlapController = TextEditingController();
   Map<String, dynamic> _apiResponse = {};
 
   String _formatTime(DateTime dateTime) {
@@ -37,44 +41,44 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flight Info App'),
+        title: const Text('Flight Info App'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _flightNumberController,
-              decoration: InputDecoration(labelText: 'Enter Flight Number'),
+              decoration: const InputDecoration(labelText: 'Enter Flight Number'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _restTimeStartController,
               decoration:
-                  InputDecoration(labelText: 'Start Rest Time (minutes)'),
+                  const InputDecoration(labelText: 'Start Rest Time (minutes)'),
             ),
             TextField(
               controller: _restTimeEndController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   labelText: 'End Rest Time Before Landing (minutes)'),
             ),
             TextField(
               controller: _amountOfShiftsController,
-              decoration: InputDecoration(labelText: 'Amount of Shifts'),
+              decoration: const InputDecoration(labelText: 'Amount of Shifts'),
             ),
             TextField(
               controller: _overlapController,
-              decoration: InputDecoration(labelText: 'Overlap (minutes)'),
+              decoration: const InputDecoration(labelText: 'Overlap (minutes)'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _fetchFlightInfo,
-              child: Text('Get Flight Info'),
+              child: const Text('Get Flight Info'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _apiResponse.isEmpty
-                ? Center(child: Text('No data available'))
+                ? const Center(child: Text('No data available'))
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,10 +88,10 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
                         _buildFlightTimeInformation(),
                     ],
                   ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _makeShiftPlan,
-              child: Text('Make Shift Plan'),
+              child: const Text('Make Shift Plan'),
             ),
           ],
         ),
@@ -99,7 +103,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
     final String flightNumber = _flightNumberController.text.trim();
 
     if (flightNumber.isNotEmpty) {
-      final String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
+      const String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
       final Uri url = Uri.parse(
         'https://airlabs.co/api/v9/flight?flight_iata=$flightNumber&api_key=$apiKey',
       );
@@ -190,9 +194,9 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.0),
-        Text('Flight Time Information'),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
+        const Text('Flight Time Information'),
+        const SizedBox(height: 16.0),
         Table(
           children: [
             _buildTableRow('Flight Number', _apiResponse['flight_iata'] ?? ''),
@@ -247,7 +251,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
           arrTimeUtc.subtract(Duration(minutes: restTimeEnd));
 
       // Calculate restTimeShiftplan and restTimePerShift
-      int restTimeShiftplan = (restDuration / amountOfShifts).toInt() - overlap;
+      int restTimeShiftplan = restDuration ~/ amountOfShifts - overlap;
       int restTimePerShift = restDuration ~/ amountOfShifts - overlap;
 
       // Calculate start and end times for each shift
@@ -265,7 +269,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Shift Plan Result'),
+            title: const Text('Shift Plan Result'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -288,8 +292,8 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
                 Text(
                   'Rest Time Per Shift: ${_formatDuration(Duration(minutes: restTimePerShift))}',
                 ),
-                SizedBox(height: 8.0),
-                Text(
+                const SizedBox(height: 8.0),
+                const Text(
                   'Shift Timings:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -301,7 +305,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
               ),
             ],
           );
@@ -313,8 +317,8 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Shift Plan Result'),
-            content: Text(
+            title: const Text('Shift Plan Result'),
+            content: const Text(
               'Shift Plan is only applicable for flights with status "scheduled".',
             ),
             actions: [
@@ -322,7 +326,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('Close'),
+                child: const Text('Close'),
               ),
             ],
           );
@@ -342,7 +346,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
           padding: const EdgeInsets.all(2.0),
           child: Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 10,
             ),
@@ -351,7 +355,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         Padding(
           padding: const EdgeInsets.all(2.0),
           child: Text(value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
               )),
         ),

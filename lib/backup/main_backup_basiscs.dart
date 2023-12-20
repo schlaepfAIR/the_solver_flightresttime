@@ -4,57 +4,61 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: FlightInfoTabView(),
     );
   }
 }
 
 class FlightInfoTabView extends StatefulWidget {
+  const FlightInfoTabView({super.key});
+
   @override
   _FlightInfoTabViewState createState() => _FlightInfoTabViewState();
 }
 
 class _FlightInfoTabViewState extends State<FlightInfoTabView> {
-  TextEditingController _flightNumberController = TextEditingController();
+  final TextEditingController _flightNumberController = TextEditingController();
   Map<String, dynamic> _apiResponse = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flight Info App'),
+        title: const Text('Flight Info App'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _flightNumberController,
-              decoration: InputDecoration(labelText: 'Enter Flight Number'),
+              decoration: const InputDecoration(labelText: 'Enter Flight Number'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _fetchFlightInfo,
-              child: Text('Get Flight Info'),
+              child: const Text('Get Flight Info'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _apiResponse.isEmpty
-                ? Center(child: Text('No data available'))
+                ? const Center(child: Text('No data available'))
                 : _buildFullApiResponse(),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             if (_apiResponse['status'] == 'en-route' ||
                 _apiResponse['status'] == 'scheduled')
               ElevatedButton(
                 onPressed: _showFlightTimeInformation,
-                child: Text('Flight Time Information'),
+                child: const Text('Flight Time Information'),
               ),
           ],
         ),
@@ -66,7 +70,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
     final String flightNumber = _flightNumberController.text.trim();
 
     if (flightNumber.isNotEmpty) {
-      final String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
+      const String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
       final Uri url = Uri.parse(
         'https://airlabs.co/api/v9/flight?flight_iata=$flightNumber&api_key=$apiKey',
       );
@@ -91,8 +95,8 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Flight Information'),
-        SizedBox(height: 16.0),
+        const Text('Flight Information'),
+        const SizedBox(height: 16.0),
         Text('Flight IATA: ${_apiResponse['flight_iata'] ?? ''}'),
         Text('Status: ${_apiResponse['status'] ?? ''}'),
         Text('Departure IATA: ${_apiResponse['dep_iata'] ?? ''}'),
@@ -171,7 +175,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         }
 
         return AlertDialog(
-          title: Text('Flight Time Information'),
+          title: const Text('Flight Time Information'),
           contentPadding: EdgeInsets.zero,
           content: SingleChildScrollView(
             child: Table(
@@ -202,7 +206,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -221,7 +225,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
           padding: const EdgeInsets.all(2.0),
           child: Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 10,
             ),
@@ -230,7 +234,7 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         Padding(
           padding: const EdgeInsets.all(2.0),
           child: Text(value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
               )),
         ),

@@ -27,9 +27,11 @@ class FlightInfoTabView extends StatefulWidget {
 
 class _FlightInfoTabViewState extends State<FlightInfoTabView> {
   final TextEditingController _flightNumberController = TextEditingController();
-  final TextEditingController _restTimeStartController = TextEditingController();
+  final TextEditingController _restTimeStartController =
+      TextEditingController();
   final TextEditingController _restTimeEndController = TextEditingController();
-  final TextEditingController _amountOfShiftsController = TextEditingController();
+  final TextEditingController _amountOfShiftsController =
+      TextEditingController();
   final TextEditingController _overlapController = TextEditingController();
   Map<String, dynamic> _apiResponse = {};
 
@@ -48,33 +50,37 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _flightNumberController,
-              decoration: const InputDecoration(labelText: 'Enter Flight Number'),
+            _buildTextField(
+              'Flight Number',
+              _flightNumberController,
+              smallInput: true,
             ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _restTimeStartController,
-              decoration:
-                  const InputDecoration(labelText: 'Start Rest Time (minutes)'),
+            _buildTextField(
+              'Start Rest Time (min)',
+              _restTimeStartController,
+              smallInput: true,
             ),
-            TextField(
-              controller: _restTimeEndController,
-              decoration: const InputDecoration(
-                  labelText: 'End Rest Time Before Landing (minutes)'),
+            _buildTextField(
+              'End Rest Time Before Landing (min)',
+              _restTimeEndController,
+              smallInput: true,
             ),
-            TextField(
-              controller: _amountOfShiftsController,
-              decoration: const InputDecoration(labelText: 'Amount of Shifts'),
+            _buildTextField(
+              'Amount of Shifts',
+              _amountOfShiftsController,
+              smallInput: true,
             ),
-            TextField(
-              controller: _overlapController,
-              decoration: const InputDecoration(labelText: 'Overlap (minutes)'),
-            ),
+            _buildTextField('Overlap (min)', _overlapController,
+                smallInput: true),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _fetchFlightInfo,
               child: const Text('Get Flight Info'),
+            ),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: _makeShiftPlan,
+              child: const Text('Make Shift Plan'),
             ),
             const SizedBox(height: 16.0),
             _apiResponse.isEmpty
@@ -88,14 +94,32 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
                         _buildFlightTimeInformation(),
                     ],
                   ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _makeShiftPlan,
-              child: const Text('Make Shift Plan'),
-            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(
+    String labelText,
+    TextEditingController controller, {
+    bool smallInput = false,
+  }) {
+    return Column(
+      children: [
+        TextField(
+          controller: controller,
+          style: TextStyle(fontSize: smallInput ? 12.0 : 14.0),
+          decoration: InputDecoration(
+            labelText: labelText,
+            contentPadding: smallInput
+                ? const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
+                : null,
+            labelStyle: TextStyle(fontSize: smallInput ? 12.0 : 14.0),
+          ),
+        ),
+        const SizedBox(height: 16.0),
+      ],
     );
   }
 
@@ -103,23 +127,27 @@ class _FlightInfoTabViewState extends State<FlightInfoTabView> {
     final String flightNumber = _flightNumberController.text.trim();
 
     if (flightNumber.isNotEmpty) {
-      const String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
-      final Uri url = Uri.parse(
-        'https://airlabs.co/api/v9/flight?flight_iata=$flightNumber&api_key=$apiKey',
-      );
+      try {
+        const String apiKey = 'ae5dd420-49c7-4c0a-8512-f317e666207a';
+        final Uri url = Uri.parse(
+          'https://airlabs.co/api/v9/flight?flight_iata=$flightNumber&api_key=$apiKey',
+        );
 
-      final response = await http.get(url);
+        final response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(response.body);
 
-        setState(() {
-          _apiResponse = data['response'];
-        });
-      } else {
-        setState(() {
-          _apiResponse = {};
-        });
+          setState(() {
+            _apiResponse = data['response'];
+          });
+        } else {
+          setState(() {
+            _apiResponse = {};
+          });
+        }
+      } catch (e) {
+        print('Error fetching flight info: $e');
       }
     }
   }
