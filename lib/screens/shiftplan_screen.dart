@@ -46,13 +46,29 @@ class ShiftplanScreen extends StatelessWidget {
 
       DateTime? currentShiftStart =
           startTime?.add(Duration(minutes: shiftPlanData['startRestPeriod']));
+      DateTime? endRestPeriod = endTime?.subtract(
+          Duration(minutes: shiftPlanData['endRestPeriod']));
+
       for (int i = 0; i < shiftPlanData['numberOfShifts']; i++) {
-        if (currentShiftStart != null) {
+        if (currentShiftStart != null && endRestPeriod != null) {
           DateTime shiftEnd =
               currentShiftStart.add(shiftDurationWithoutOverlap);
+
+          // Ensure shift end does not exceed 'End of Rest Period'
+          if (shiftEnd.isAfter(endRestPeriod)) {
+            shiftEnd = endRestPeriod;
+          }
+
           shiftWidgets.add(Text(
               'Shift ${i + 1}: ${_formatTime(currentShiftStart)} - ${_formatTime(shiftEnd)}'));
+
+          // Prepare the start of the next shift
           currentShiftStart = shiftEnd.add(overlapDuration);
+
+          // Break the loop if the next shift start exceeds 'End of Rest Period'
+          if (currentShiftStart.isAfter(endRestPeriod)) {
+            break;
+          }
         }
       }
       return shiftWidgets;
