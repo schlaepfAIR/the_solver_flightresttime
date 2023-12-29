@@ -98,9 +98,6 @@ class RestCalculationScreen extends StatelessWidget {
     dataWidgets.add(buildShiftPlanButton());
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Rest Calculation'),
-      ),
       body: ListView(
         children: dataWidgets,
       ),
