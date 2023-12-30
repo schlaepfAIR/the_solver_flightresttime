@@ -1,19 +1,44 @@
 {
   "images" : [
     {
-      "filename" : "App_store_1024_1x2.png",
+      "filename" : "App_store_1024_1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "App_store_1024_1x3.png",
+      "filename" : "App_store_1024_1x2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "App_store_1024_1x4.png",
+      "filename" : "App_store_1024_1x3.png",
       "idiom" : "universal",
       "scale" : "3x"
+    },
+    {
+      "filename" : "App_store_1024_1x 2.png",
+      "idiom" : "iphone",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "App_store_1024_1x2 2.png",
+      "idiom" : "iphone",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "App_store_1024_1x3 1.png",
+      "idiom" : "iphone",
+      "scale" : "3x"
+    },
+    {
+      "filename" : "App_store_1024_1x 1.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "App_store_1024_1x2 1.png",
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {
