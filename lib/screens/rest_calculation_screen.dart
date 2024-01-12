@@ -4,7 +4,8 @@ import '../dialogs/shift_plan_dialog.dart';
 
 class RestCalculationScreen extends StatelessWidget {
   final dynamic flightData; // Flight data received from previous screen.
-  final Function(Map<String, dynamic>) onShiftPlanCreated; // Function to handle shift plan creation.
+  final Function(Map<String, dynamic>)
+      onShiftPlanCreated; // Function to handle shift plan creation.
 
   RestCalculationScreen({
     required this.flightData,
@@ -71,12 +72,12 @@ class RestCalculationScreen extends StatelessWidget {
     var responseData = flightData['response'] ?? {};
 
     DateTime? departureTime = _parseUtcTime(responseData['dep_actual_utc']) ??
-                              _parseUtcTime(responseData['dep_estimated_utc']) ??
-                              _parseUtcTime(responseData['dep_time_utc']);
+        _parseUtcTime(responseData['dep_estimated_utc']) ??
+        _parseUtcTime(responseData['dep_time_utc']);
 
     DateTime? arrivalTime = _parseUtcTime(responseData['arr_actual_utc']) ??
-                            _parseUtcTime(responseData['arr_estimated_utc']) ??
-                            _parseUtcTime(responseData['arr_time_utc']);
+        _parseUtcTime(responseData['arr_estimated_utc']) ??
+        _parseUtcTime(responseData['arr_time_utc']);
 
     bool isEnRoute = responseData['status'] == 'en-route';
     String? calculatedDuration;
@@ -100,7 +101,8 @@ class RestCalculationScreen extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Text(
               "The actual version displays all times in UTC",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
           Table(
@@ -109,33 +111,43 @@ class RestCalculationScreen extends StatelessWidget {
               1: FlexColumnWidth(),
             },
             children: [
-              _buildTableRow("Actual Time UTC", Text(_formatTime(departureTime))),
-              _buildTableRow("Status", _statusLabel(responseData['status']?.toString())),
-              _buildTableRow("Flight IATA", Text(responseData['flight_iata']?.toString() ?? 'N/A')),
-              _buildTableRow("Origin", Text(responseData['dep_iata']?.toString() ?? 'N/A')),
-              _buildTableRow("Destination", Text(responseData['arr_iata']?.toString() ?? 'N/A')),
-              _buildTableRow("Airline", Text(responseData['airline_name']?.toString() ?? 'N/A')),
-              _buildTableRow("Departure Time", Text(_formatTime(departureTime))),
+              _buildTableRow("Actual Time UTC",
+                  Text(responseData['utc']?.toString() ?? 'N/A')),
+              _buildTableRow(
+                  "Status", _statusLabel(responseData['status']?.toString())),
+              _buildTableRow("Flight IATA",
+                  Text(responseData['flight_iata']?.toString() ?? 'N/A')),
+              _buildTableRow("Origin",
+                  Text(responseData['dep_iata']?.toString() ?? 'N/A')),
+              _buildTableRow("Destination",
+                  Text(responseData['arr_iata']?.toString() ?? 'N/A')),
+              _buildTableRow("Airline",
+                  Text(responseData['airline_name']?.toString() ?? 'N/A')),
+              _buildTableRow(
+                  "Departure Time", Text(_formatTime(departureTime))),
               _buildTableRow("Arrival Time", Text(_formatTime(arrivalTime))),
-              _buildTableRow("Calculated Duration", Text(calculatedDuration ?? 'N/A')),
+              _buildTableRow(
+                  "Calculated Duration", Text(calculatedDuration ?? 'N/A')),
             ],
           ),
-          isEnRoute ? ElevatedButton(
-            onPressed: () async {
-              Map<String, dynamic>? shiftPlanData =
-                  await showShiftPlanDialog(context);
-              if (shiftPlanData != null) {
-                onShiftPlanCreated(shiftPlanData);
-              }
-            },
-            child: Text('Make Shiftplan'),
-          ) : Tooltip(
-            message: "Flight has to be en-route",
-            child: ElevatedButton(
-              onPressed: null,
-              child: Text('Make Shiftplan'),
-            ),
-          ),
+          isEnRoute
+              ? ElevatedButton(
+                  onPressed: () async {
+                    Map<String, dynamic>? shiftPlanData =
+                        await showShiftPlanDialog(context);
+                    if (shiftPlanData != null) {
+                      onShiftPlanCreated(shiftPlanData);
+                    }
+                  },
+                  child: Text('Make Shiftplan'),
+                )
+              : Tooltip(
+                  message: "Flight has to be en-route",
+                  child: ElevatedButton(
+                    onPressed: null,
+                    child: Text('Make Shiftplan'),
+                  ),
+                ),
         ],
       ),
     );
