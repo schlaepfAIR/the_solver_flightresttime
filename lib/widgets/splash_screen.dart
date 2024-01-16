@@ -21,13 +21,13 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    // Initializing the animation controller with a duration of 2 seconds.
+    // Initializing the animation controller with a duration of n seconds.
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this, // Providing the current context for vsync.
     )..repeat(); // Repeating the animation.
 
-    // Setting up a Timer to navigate to the next screen after 2 seconds.
+    // Setting up a Timer to navigate to the next screen after n seconds.
     Timer(
         Duration(seconds: 3),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
